@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from './pages/homepage/homepage.component';
 import Shop from './pages/shop/shop.component.jsx';
-
+import Header from './components/header/header.component.jsx';
 // const HatsPage = (props) => (
 //   <div>
 //       <h1>HATS PAGE</h1>
@@ -16,6 +16,8 @@ import Shop from './pages/shop/shop.component.jsx';
 function App() {
   return (
     <div>
+      {/** Call Header outside the Switch to ensure that it is always present regardless of the links you click */}
+      <Header />
       <Switch>
         {/**Switch matches the exact path to render */}
         {/** Route only passes the three props to the component specified and not to the children of the components such as Menu Item */}
