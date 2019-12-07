@@ -6,7 +6,7 @@ import HomePage from './pages/homepage/homepage.component';
 import Shop from './pages/shop/shop.component.jsx';
 import  SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up';
 import Header from './components/header/header.component.jsx';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 // const HatsPage = (props) => (
 //   <div>
 //       <h1>HATS PAGE</h1>
@@ -33,10 +33,33 @@ class App extends React.Component {
     // subscription - subcriber always listening to auth to detect change in state
     // ensures persistence of user
     // this is an open subscription
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user});
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // this.setState({ currentUser: user});
 
-      console.log(user);
+      // console.log(user);
+      // createUserProfileDocument(user);
+      if (userAuth) {
+        // we need the userRef to check if out database has updated at that reference with any new data
+        const userRef = await createUserProfileDocument(userAuth);
+        // checking if snapshot has changed, send us a snaphot of data in our database
+         
+        userRef.onSnapshot(snapShot => {
+          // get data related to the user that we have just stored or that is already stored
+          // .data() allows us to actually see what out data loooks like
+          // returns us an object with properties we need -> but it doesn't have an id
+          // console.log(snapShot.data()); thus we use both snapShot and snapShot.data() to set our state
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+          console.log(this.state);
+        })
+        
+      }
+      // incase user signs out, we want to set our current user to null
+      this.setState({ currentUser: userAuth });
     })
   }
 

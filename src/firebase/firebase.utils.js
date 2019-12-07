@@ -14,6 +14,40 @@ const config =  {
     measurementId: "G-NS6ME356NL"
   };
 
+  export const createUserProfileDocument = async (userAuth,  addititonalData) => {
+    // we want to save the user object if the user is signed in and not when its null
+    if (!userAuth) return; // does not exists
+    // query is us asking firestore for some document or collection
+    // Firestore returns us two of objects i.e. references and snapshots
+    // reference is simply an object that represent current place in the database thata we are asking for
+
+    // we want to check whether or not we have store this particular user at that reference
+    const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+    const snapShot = await userRef.get();
+    // user does not exists in the database
+    if (!snapShot.exists) {
+        // getting displayName and email from the userAuth object
+        const { displayName, email } = userAuth;
+        const createdAt = new Date();
+
+        try {
+            // we are making asynchronous request to out database to store this particular user
+            await userRef.set({
+                displayName,
+                email,
+                createdAt,
+                ...addititonalData
+            })
+        } catch (error) {
+            console.log('error creating user ', error.message);
+
+        }
+    }
+
+    return userRef;
+  }
+
   firebase.initializeApp(config);
 
   export const auth = firebase.auth();
