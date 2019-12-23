@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import HomePage from "./pages/homepage/homepage.component";
 import Shop from "./pages/shop/shop.component.jsx";
@@ -45,12 +45,27 @@ class App extends React.Component {
           {/** Route only passes the three props to the component specified and not to the children of the components such as Menu Item */}
           <Route exact component={HomePage} path={"/"} />
           <Route component={Shop} path={"/shop"} />
-          <Route component={SignInAndSignUpPage} path={"/signin"} />
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to="/" />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
+          {/* <Route component={SignInAndSignUpPage} path={"/signin"} /> */}
         </Switch>
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
@@ -58,4 +73,4 @@ const mapDispatchToProps = dispatch => ({
 
 // our component does not use the currentUser at all thus no need for mapStateToProps
 // it just sets the state of the current User
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
