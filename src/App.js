@@ -6,9 +6,11 @@ import HomePage from "./pages/homepage/homepage.component";
 import Shop from "./pages/shop/shop.component.jsx";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up";
 import Header from "./components/header/header.component.jsx";
+import CheckoutPage from "./components/checkout/checkout.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 import { connect } from "react-redux";
+import { selectCurrentUser } from "../src/redux/user/user.selector";
 // we need user action to set the state of the current user
 import { setCurrentUser } from "./redux/user/user.actions";
 
@@ -45,6 +47,7 @@ class App extends React.Component {
           {/** Route only passes the three props to the component specified and not to the children of the components such as Menu Item */}
           <Route exact component={HomePage} path={"/"} />
           <Route component={Shop} path={"/shop"} />
+          <Route exact component={CheckoutPage} path={"/checkout"} />
           <Route
             exact
             path="/signin"
@@ -63,9 +66,14 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+// const mapStateToProps = ({ user }) => ({
+//   currentUser: user.currentUser
+// });
+const mapStateToProps = state => ({
+  currentUser: selectCurrentUser(state)
 });
+
+// can be converted to use createStructuredSelectors for scalability
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
