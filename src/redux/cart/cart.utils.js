@@ -1,4 +1,4 @@
-import CartItem from "../../components/cart-item/cart-item.component";
+// import CartItem from "../../components/cart-item/cart-item.component";
 
 // Utility functions helps us to keep our files clean nd organize functions that we ,ay need in multiple
 // files in one location.

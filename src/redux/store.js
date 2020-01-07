@@ -1,10 +1,15 @@
 import { createStore, applyMiddleware } from "redux";
+// allows our browser to cache our store dependin on confiuration options
+import { persistStore } from "redux-persist";
 import logger from "redux-logger";
 
 import rootReducer from "./root-reducer";
 
 const middlewares = [logger];
 
-const store = createStore(rootReducer, applyMiddleware(...middlewares));
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
-export default store;
+// persisted version of our store
+export const persistor = persistStore(store);
+
+export default { store, persistor };
