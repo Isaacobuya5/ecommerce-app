@@ -9,6 +9,9 @@ import Header from "./components/header/header.component.jsx";
 import CheckoutPage from "./components/checkout/checkout.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
+// For practise
+import Display from "./components/styled-components/styled-component";
+
 import { connect } from "react-redux";
 import { selectCurrentUser } from "../src/redux/user/user.selector";
 // we need user action to set the state of the current user
@@ -48,6 +51,7 @@ class App extends React.Component {
           <Route exact component={HomePage} path={"/"} />
           <Route component={Shop} path={"/shop"} />
           <Route exact component={CheckoutPage} path={"/checkout"} />
+          <Route exact component={Display} path={"/practice"} />
           <Route
             exact
             path="/signin"

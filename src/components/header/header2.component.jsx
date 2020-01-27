@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { createStructuredSelector } from "reselect";
@@ -7,42 +8,42 @@ import { selectCartHidden } from "../../redux/cart/cart.selectors";
 import { auth } from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropDown from "../cart-dropdown/card-dropdown.component";
-
-import {
-  HeaderContainer,
-  LogoContainer,
-  OptionsContainer,
-  OptionDiv,
-  OptionLink
-} from "./header.styles";
+import "./header.styles.scss";
 
 const Header = ({ currentUser, hidden }) => (
-  <HeaderContainer>
-    <LogoContainer to="/">
+  <div className="header">
+    <Link className="logo-container" to="/">
       <Logo className="logo" />
-    </LogoContainer>
+    </Link>
 
-    <OptionsContainer>
-      <OptionLink to="/shop">SHOP</OptionLink>
-      <OptionLink to="/contact">CONTACT</OptionLink>
+    <div className="options">
+      <Link className="option" to="/shop">
+        SHOP
+      </Link>
+      <Link className="option" to="/contact">
+        CONTACT
+      </Link>
       {// if current user is an object, it will evaluate to true hence div
       // otherwise if it's null, it will render link
       currentUser ? (
-        <OptionDiv
+        <div
+          className="option"
           onClick={() => {
             console.log("User signed out succesfully");
             auth.signOut();
           }}
         >
           SIGN OUT
-        </OptionDiv>
+        </div>
       ) : (
-        <OptionLink to="/signin">SIGN IN</OptionLink>
+        <Link className="option" to="/signin">
+          SIGN IN
+        </Link>
       )}
       <CartIcon />
-    </OptionsContainer>
+    </div>
     {hidden ? null : <CartDropDown />}
-  </HeaderContainer>
+  </div>
 );
 
 // const mapStateToProps = state => ({
