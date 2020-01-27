@@ -41,6 +41,10 @@ const CheckoutPage = ({ cartItems, total }) => (
       4242 4242 4242 4242 - Exp: 02/25 - CVV: 123
     </div>
     <StripeCheckoutButton price={total} />
+
+    {/* <div className="paypal_test">
+      <PaypalCheckout price={total} />
+    </div> */}
   </div>
 );
 
