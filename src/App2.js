@@ -7,7 +7,11 @@ import Shop from "./pages/shop/shop.component.jsx";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up";
 import Header from "./components/header/header.component.jsx";
 import CheckoutPage from "./components/checkout/checkout.component";
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments
+} from "./firebase/firebase.utils";
 
 // For practise
 import Display from "./components/styled-components/styled-component";
@@ -17,12 +21,13 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "../src/redux/user/user.selector";
 // we need user action to set the state of the current user
 import { setCurrentUser } from "./redux/user/user.actions";
+import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collectionsArray } = this.props;
     // we are checking if the auth state has changed while passing an authenticated user
     // user authenticates with google sign in or email and password
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
@@ -38,6 +43,10 @@ class App extends React.Component {
           });
           // incase user signs out, we want to set our current user to null
           setCurrentUser(userAuth);
+          addCollectionAndDocuments(
+            "collections",
+            collectionsArray.map(({ title, items }) => ({ title, items }))
+          );
         });
       }
     });
@@ -80,7 +89,8 @@ class App extends React.Component {
 //   currentUser: user.currentUser
 // });
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  collectionsArray: selectCollectionsForPreview
 });
 
 // can be converted to use createStructuredSelectors for scalability
